@@ -8,11 +8,11 @@ SECRET_KEY = 'MylongSecretkey1234567890'
 
 # Email Server Settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-DEFAULT_FROM_EMAIL = 'tempbytedeveloper@gmail.com'
-SERVER_EMAIL = 'tempbytedeveloper@gmail.com'
+DEFAULT_FROM_EMAIL = 'stevebarriya25287@gmail.com'
+SERVER_EMAIL = 'stevebarriya25287@gmail.com'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'tempbytedeveloper@gmail.com'
-EMAIL_HOST_PASSWORD = 'rmsvhcofgzspmose'
+EMAIL_HOST_USER = 'stevebarriya25287@gmail.com'
+EMAIL_HOST_PASSWORD = 'sam@#777'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
@@ -27,7 +27,7 @@ DATABASES = {
 }
 
 # Server Customizations
-ADMIN_EMAIL = "you@your_email.com"
+ADMIN_EMAIL = "stevebarriya25287@gmail.com"
 URL_FOR_LINKS = "https://crm.example.com"
 
 

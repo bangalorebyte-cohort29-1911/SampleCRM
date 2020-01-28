@@ -26,7 +26,7 @@ from common.utils import COUNTRIES, LEAD_SOURCE, LEAD_STATUS
 from contacts.models import Contact
 from leads.forms import (LeadAttachmentForm, LeadCommentForm, LeadForm,
                          LeadListForm)
-from leads.models import Lead
+from leads.models import Lead, Tags
 from leads.tasks import (create_lead_from_file, send_email_to_assigned_user,
                          send_lead_assigned_emails, update_leads_cache)
 from planner.forms import ReminderForm

@@ -18,7 +18,7 @@ from common.tasks import send_email_user_mentions
 from contacts.models import Contact
 from tasks.celery_tasks import send_email
 from tasks.forms import TaskAttachmentForm, TaskCommentForm, TaskForm
-from tasks.models import Task
+from tasks.models import Task, Account
 from tasks.utils import *
 from teams.models import Teams
 
@@ -65,13 +65,14 @@ def task_create(request):
     if request.method == 'GET':
         if request.user.role == 'ADMIN' or request.user.is_superuser:
             users = User.objects.filter(is_active=True).order_by('email')
-            accounts = None
+            accounts = Account.objects.filter(status="open")
         # elif request.user.google.all():
         #     users = []
         #     accounts = Account.objects.filter(created_by=request.user).filter(status="open")
         else:
             users = User.objects.filter(role='ADMIN').order_by('email')
-            accounts = None
+            accounts = Account.objects.filter(Q(created_by=request.user) | Q(assigned_to__in=[request.user])).filter(status="open")
+        form = TaskForm(request_user=request.user)
         form = TaskForm(request_user=request.user)
         return render(request, 'task_create.html', {'form': form, 'users': users, 'accounts':accounts, 
             "teams": Teams.objects.all(),
@@ -133,8 +134,8 @@ def task_detail(request, task_id):
         # if Task.objects.filter(id=task_id).exists():
         #     task = Task.objects.select_related('account').prefetch_related(
         #         'assigned_to', 'contacts').get(id=task_id)
-        attachments = task.tasks_attachment.all()
-        comments = task.tasks_comments.all()
+        # attachments = task.tasks_attachment.all()
+        # comments = task.tasks_comments.all()
         if request.user.is_superuser or request.user.role == 'ADMIN':
             users_mention = list(User.objects.filter(is_active=True).values('username'))
         elif request.user != task.created_by:
@@ -142,15 +143,15 @@ def task_detail(request, task_id):
         else:
             users_mention = list(task.assigned_to.all().values('username'))
         return render(request, 'task_detail.html',
-                      {'task': task, 'users_mention': users_mention,
-                       'attachments': attachments, 'comments': comments})
+                      {'task': task, 'users_mention': users_mention})
+                      # 'attachments': attachments, 'comments': comments})
 
 
 @login_required
 @sales_access_required
 def task_edit(request, task_id):
     task_obj = get_object_or_404(Task, pk=task_id)
-    accounts = None
+    accounts = Account.objects.filter(status="open")
 
     if not (request.user.role == 'ADMIN' or request.user.is_superuser or task_obj.created_by == request.user):
         raise PermissionDenied

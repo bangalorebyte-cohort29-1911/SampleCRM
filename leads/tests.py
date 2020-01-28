@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.utils.encoding import force_text
 
 from accounts.models import Account, Tags
-from cases.models import Case
+# from cases.models import Case
 from common.models import APISettings, Attachments, Comment, User
 from leads.forms import *
 from leads.models import Lead

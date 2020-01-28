@@ -9,8 +9,18 @@ from phonenumber_field.modelfields import PhoneNumberField
 from common.models import User
 from common.utils import (COUNTRIES, LEAD_SOURCE, LEAD_STATUS,
                           return_complete_address)
+from django.utils.text import slugify
 from contacts.models import Contact
 from teams.models import Teams
+
+
+class Tags(models.Model):
+    name = models.CharField(max_length=20)
+    slug = models.CharField(max_length=20, unique=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Tags, self).save(*args, **kwargs)
 
 class Lead(models.Model):
     title = models.CharField(
@@ -53,7 +63,7 @@ class Lead(models.Model):
     created_on = models.DateTimeField(_("Created on"), auto_now_add=True)
     is_active = models.BooleanField(default=False)
     enquery_type = models.CharField(max_length=255, blank=True, null=True)
-    # tags = models.ManyToManyField(Tags, blank=True)
+    tags = models.ManyToManyField(Tags, blank=True)
     contacts = models.ManyToManyField(Contact, related_name="lead_contacts")
     created_from_site = models.BooleanField(default=False)
     teams = models.ManyToManyField(Teams, related_name='lead_teams')

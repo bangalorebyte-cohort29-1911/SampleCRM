@@ -35,6 +35,9 @@ python-memcached = "==1.59"
 boto = "*"
 Django = "==2.2.4"
 sqlparse = "*"
+json = "*"
+six = "*"
+sass = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.8"

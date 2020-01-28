@@ -83,8 +83,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'django_crm',
-        'USER': 'jithin',
-        'PASSWORD': 'password',
+        'USER': 'steve',
+        'PASSWORD': 'sam@#777',
         'HOST': os.getenv('DB_HOST', '127.0.0.1'),
         'PORT': os.getenv('DB_PORT', '5432')
     }
@@ -128,18 +128,32 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # EMAIL_HOST = 'localhost'
 # EMAIL_PORT = 25
 # AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend', )
+[
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+]
 
+ADMINS = (
+    ('steve', 'stevebarriya25287@gmail.com'),
+)
 
-EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = os.getenv('SG_USER', '')
-EMAIL_HOST_PASSWORD = os.getenv('SG_PWD', '')
+MANAGERS = ADMINS
+MAILER_EMAIL_BACKEND = 'django_libs.test_email_backend.EmailBackend'
+TEST_EMAIL_BACKEND_RECIPIENTS = ADMINS
+
+FROM_EMAIL = ADMINS[0][1]
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = FROM_EMAIL
+EMAIL_HOST_PASSWORD = 'sam#@777'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
@@ -222,7 +236,7 @@ COMPRESS_OFFLINE_CONTEXT = {
     'STATIC_URL': 'STATIC_URL',
 }
 
-DEFAULT_FROM_EMAIL = 'no-reply@django-crm.micropyramid.com'
+DEFAULT_FROM_EMAIL = 'stevebarriya25287@gmail.com'
 
 # celery Tasks
 CELERY_BROKER_URL = 'redis://localhost:6379'
@@ -262,7 +276,7 @@ SG_PWD = os.getenv('SG_PWD', '')
 
 MANDRILL_API_KEY = os.getenv('MANDRILL_API_KEY', '')
 
-ADMIN_EMAIL = "admin@micropyramid.com"
+ADMIN_EMAIL = "stevebarriya25287@gmail.com"
 
 URL_FOR_LINKS = "http://demo.django-crm.io"
 
@@ -276,7 +290,7 @@ GP_CLIENT_ID = os.getenv('GP_CLIENT_ID', False)
 GP_CLIENT_SECRET = os.getenv('GP_CLIENT_SECRET', False)
 ENABLE_GOOGLE_LOGIN = os.getenv('ENABLE_GOOGLE_LOGIN', False)
 
-MARKETING_REPLY_EMAIL = 'djangocrm@micropyramid.com'
+MARKETING_REPLY_EMAIL = 'stevebarriya25287@gmail.com'
 
 PASSWORD_RESET_TIMEOUT_DAYS = 3
 

@@ -1,6 +1,5 @@
 from django import forms
-from tasks.models import Task
-# from accounts.models import Account
+from tasks.models import Task, Account
 from contacts.models import Contact
 from common.models import User, Attachments, Comment
 from django.db.models import Q
@@ -20,13 +19,16 @@ class TaskForm(forms.ModelForm):
             field.widget.attrs = {"class": "form-control"}
 
         if request_user.role == 'USER':
-            self.fields["account"].queryset = None
+            # self.fields["account"].queryset = Account.objects.filter(
+            #     Q(assigned_to__in=[request_user]) | Q(created_by=request_user)).filter(status="open")
 
             self.fields["contacts"].queryset = Contact.objects.filter(
                 Q(assigned_to__in=[request_user]) | Q(created_by=request_user))
 
         if request_user.role == 'ADMIN' or request_user.is_superuser:
-            self.fields["account"].queryset = None
+            # self.fields["account"].queryset =  Account.objects.filter(
+            #     status="open")
+
 
             self.fields["contacts"].queryset = Contact.objects.filter()
             self.fields["teams"].choices = [(team.get('id'), team.get(
@@ -41,7 +43,7 @@ class TaskForm(forms.ModelForm):
         self.fields['title'].required = True
         self.fields['status'].required = True
         self.fields['priority'].required = True
-        self.fields['account'].required = False
+        # self.fields['account'].required = False
         self.fields['contacts'].required = False
         self.fields['due_date'].required = False
 

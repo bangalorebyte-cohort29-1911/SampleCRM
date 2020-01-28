@@ -4,7 +4,6 @@ from django.urls import reverse
 from django.utils.encoding import force_text
 
 from accounts.models import Account
-from cases.models import Case
 from common.models import Address, Attachments, Comment, User
 from contacts.forms import ContactAttachmentForm
 from contacts.models import Contact
@@ -36,22 +35,6 @@ class ContactObjectsCreation(object):
             description="contact",
             created_by=self.user)
         self.contact.assigned_to.add(self.user)
-        self.case = Case.objects.create(
-            name="jane doe case",
-            case_type="Problem",
-            status="New",
-            priority="Low",
-            description="description for case",
-            created_by=self.user,
-            closed_on="2016-05-04")
-        self.comment = Comment.objects.create(
-            comment='test comment', case=self.case,
-            commented_by=self.user
-        )
-        self.attachment = Attachments.objects.create(
-            attachment='image.png', case=self.case,
-            created_by=self.user
-        )
 
         self.user_contacts_mp = User.objects.create(
             first_name="janeUser@example.com",
@@ -388,10 +371,6 @@ class TestContactCreateContact(ContactObjectsCreation, TestCase):
         self.assertJSONEqual(force_text(response.content), {
                              'error': "You don't have permission to add attachment."})
 
-        self.attachment = Attachments.objects.create(
-            attachment='image.png', case=self.case,
-            created_by=self.user
-        )
         response = self.client.post(
             '/contacts/attachment/remove/', {'attachment_id': self.attachment.id})
         self.assertJSONEqual(force_text(response.content), {

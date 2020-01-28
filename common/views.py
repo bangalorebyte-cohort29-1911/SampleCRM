@@ -45,6 +45,7 @@ from contacts.models import Contact
 from leads.models import Lead
 # from opportunity.models import Opportunity
 from teams.models import Teams
+from tasks.models import Task
 # from marketing.models import ContactEmailCampaign, BlockedDomain, BlockedEmail 
 
 
@@ -74,25 +75,26 @@ class HomeView(SalesAccessRequiredMixin, LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
-        # accounts = Account.objects.filter(status="open")
         contacts = Contact.objects.all()
         leads = Lead.objects.exclude(
             status='converted').exclude(status='closed')
-        opportunities = []
+        tasks = Task.objects.all()
+        teams =Teams.objects.all()
         if self.request.user.role == "ADMIN" or self.request.user.is_superuser:
             pass
         else:
-            accounts = None
             contacts = contacts.filter(
                 Q(assigned_to__id__in=[self.request.user.id]) |
                 Q(created_by=self.request.user.id))
             leads = leads.filter(
                 Q(assigned_to__id__in=[self.request.user.id]) |
                 Q(created_by=self.request.user.id)).exclude(status='closed')
-            opportunities = None
 
-        context["contacts_count"] = contacts.count()
-        context["leads_count"] = leads
+        context["contacts"] = contacts
+        context["leads"] = leads
+        context["tasks"] = tasks
+        context["teams"] = teams
+
         return context
 
 
